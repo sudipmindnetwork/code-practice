@@ -1,0 +1,74 @@
+Write a program to evaluate a postfix expression.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+// Structure for stack
+struct Stack {
+    int top;
+    unsigned capacity;
+    int* array;
+};
+
+// Function to create a stack of given capacity
+struct Stack* createStack(unsigned capacity) {
+    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
+    stack->capacity = capacity;
+    stack->top = -1;
+    stack->array = (int*)malloc(stack->capacity * sizeof(int));
+    return stack;
+}
+
+// Function to check if the stack is empty
+int isEmpty(struct Stack* stack) {
+    return stack->top == -1;
+}
+
+// Function to pop an item from the stack
+int pop(struct Stack* stack) {
+    if (!isEmpty(stack))
+        return stack->array[stack->top--];
+    return '$'; // Stack is empty, return a special value
+}
+
+// Function to push an item to the stack
+void push(struct Stack* stack, int op) {
+    stack->array[++stack->top] = op;
+}
+
+// Function to evaluate a postfix expression
+int evaluatePostfix(char* exp) {
+    struct Stack* stack = createStack(strlen(exp));
+    int i;
+
+    // Traverse the expression
+    for (i = 0; exp[i]; ++i) {
+        // If the current character is an operand, push it to the stack
+        if (isdigit(exp[i]))
+            push(stack, exp[i] - '0');
+
+        // If the current character is an operator, pop two elements from the stack,
+        // perform the operation, and push the result back to the stack
+        else {
+            int val1 = pop(stack);
+            int val2 = pop(stack);
+            switch (exp[i]) {
+            case '+': push(stack, val2 + val1); break;
+            case '-': push(stack, val2 - val1); break;
+            case '*': push(stack, val2 * val1); break;
+            case '/': push(stack, val2 / val1); break;
+            }
+        }
+    }
+    // The final result is at the top of the stack
+    return pop(stack);
+}
+
+// Driver program to test the above functions
+int main() {
+    char exp[] = "231*+9-"; // Example postfix expression: 2*3+9-
+    printf("Result: %d\n", evaluatePostfix(exp));
+    return 0;
+}

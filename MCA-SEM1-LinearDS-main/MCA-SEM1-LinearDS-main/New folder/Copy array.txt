@@ -1,0 +1,39 @@
+There are two arrays A and B. A contains 25 elements, whereas B contains 30 elements. Write 
+a function to create an array C that contains only those elements that are common to A and 
+B.
+
+
+#include <stdio.h>
+
+void findCommonElements(int A[], int sizeA, int B[], int sizeB, int C[], int *sizeC) {
+    *sizeC = 0;
+
+    for (int i = 0; i < sizeA; i++) {
+        for (int j = 0; j < sizeB; j++) {
+            if (A[i] == B[j]) {
+                C[(*sizeC)++] = A[i];
+                break;
+            }
+        }
+    }
+}
+
+int main() {
+    int A[25] = { /* fill with your values */ };
+    int B[30] = { /* fill with your values */ };
+    int C[25 + 30];  // Assuming the maximum size of the intersection is the sum of sizes
+
+    int sizeC;
+
+    findCommonElements(A, 25, B, 30, C, &sizeC);
+
+    // Now, array C contains the common elements, and sizeC holds the size of array C.
+
+    // You can print the common elements if needed
+    printf("Common elements: ");
+    for (int i = 0; i < sizeC; i++) {
+        printf("%d ", C[i]);
+    }
+
+    return 0;
+}

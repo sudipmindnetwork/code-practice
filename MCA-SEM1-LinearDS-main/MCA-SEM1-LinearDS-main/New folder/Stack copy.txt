@@ -1,0 +1,78 @@
+Write a function that accepts two stacks. Copy the contents of first stack in the second stack. 
+Note that the order of elements must be preserved.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 100
+
+struct Stack {
+    int arr[MAX_SIZE];
+    int top;
+};
+
+// Function to initialize a stack
+void initialize(struct Stack *stack) {
+    stack->top = -1;
+}
+
+// Function to check if a stack is empty
+int isEmpty(struct Stack *stack) {
+    return stack->top == -1;
+}
+
+// Function to push an element onto the stack
+void push(struct Stack *stack, int value) {
+    if (stack->top == MAX_SIZE - 1) {
+        printf("Stack overflow\n");
+        return;
+    }
+    stack->arr[++stack->top] = value;
+}
+
+// Function to pop an element from the stack
+int pop(struct Stack *stack) {
+    if (isEmpty(stack)) {
+        printf("Stack underflow\n");
+        exit(EXIT_FAILURE);
+    }
+    return stack->arr[stack->top--];
+}
+
+// Function to copy the contents of the first stack to the second stack
+void copyStack(struct Stack *src, struct Stack *dest) {
+    struct Stack tempStack;
+    initialize(&tempStack);
+
+    // Copy elements from src to tempStack
+    while (!isEmpty(src)) {
+        push(&tempStack, pop(src));
+    }
+
+    // Copy elements from tempStack to dest (to preserve order)
+    while (!isEmpty(&tempStack)) {
+        push(dest, pop(&tempStack));
+    }
+}
+
+int main() {
+    struct Stack stack1, stack2;
+    initialize(&stack1);
+    initialize(&stack2);
+
+    // Push some elements onto the first stack
+    push(&stack1, 1);
+    push(&stack1, 2);
+    push(&stack1, 3);
+
+    // Copy the contents of the first stack to the second stack
+    copyStack(&stack1, &stack2);
+
+    // Print the elements of the second stack
+    while (!isEmpty(&stack2)) {
+        printf("%d ", pop(&stack2));
+    }
+
+    return 0;
+}
